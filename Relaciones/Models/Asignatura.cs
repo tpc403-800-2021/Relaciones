@@ -11,6 +11,6 @@ namespace Relaciones.Models
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public int Duracion { get; set; }
-        public virtual ICollection<Estudiante> Estudiantes { get; set; }
+        public virtual ICollection<AsignaturaEstudiante> AsignaturaEstudiantes { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Relaciones.Models.Estudiante>
+﻿@model Relaciones.Models.EstudiantesIndex
 
 @{
     ViewData["Title"] = "Index";
@@ -13,27 +13,37 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                Nombre Completo
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Edad)
+                Edad
+            </th>
+            <th>
+                Asignaturas Asignadas
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var estudiante in Model.Estudiantes) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
+                @Html.DisplayFor(modelItem => estudiante.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Edad)
+                @Html.DisplayFor(modelItem => estudiante.Edad)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @foreach(var asignaturaEstudiante in estudiante.AsignaturaEstudiantes)
+                {
+                <p>@asignaturaEstudiante.Asignatura.Nombre</p>
+                }
+            </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@estudiante.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@estudiante.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@estudiante.Id">Delete</a>
             </td>
         </tr>
 }

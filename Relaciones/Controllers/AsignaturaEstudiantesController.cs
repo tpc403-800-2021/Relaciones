@@ -49,8 +49,8 @@ namespace Relaciones.Controllers
         // GET: AsignaturaEstudiantes/Create
         public IActionResult Create()
         {
-            ViewData["AsignaturasId"] = new SelectList(_context.Asignaturas, "Id", "Id");
-            ViewData["EstudiantesId"] = new SelectList(_context.Estudiantes, "Id", "Id");
+            ViewData["AsignaturasId"] = new SelectList(_context.Asignaturas, "Id", "Nombre");
+            ViewData["EstudiantesId"] = new SelectList(_context.Estudiantes, "Id", "Nombre");
             return View();
         }
 
@@ -85,8 +85,8 @@ namespace Relaciones.Controllers
             {
                 return NotFound();
             }
-            ViewData["AsignaturasId"] = new SelectList(_context.Asignaturas, "Id", "Id", asignaturaEstudiante.AsignaturasId);
-            ViewData["EstudiantesId"] = new SelectList(_context.Estudiantes, "Id", "Id", asignaturaEstudiante.EstudiantesId);
+            ViewData["AsignaturasId"] = new SelectList(_context.Asignaturas, "Id", "Nombre", asignaturaEstudiante.AsignaturasId);
+            ViewData["EstudiantesId"] = new SelectList(_context.Estudiantes, "Id", "Nombre", asignaturaEstudiante.EstudiantesId);
             return View(asignaturaEstudiante);
         }
 

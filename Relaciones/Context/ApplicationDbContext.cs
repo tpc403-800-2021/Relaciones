@@ -16,7 +16,7 @@ namespace Relaciones.Context
 
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
-        public DbSet<Estudiante> Estudiantes { get; set; }
+        public DbSet<Estudiante> Estudiantes { get; set; }//select * from estudiantes
         public DbSet<Asignatura> Asignaturas { get; set; }
 
         public DbSet<AsignaturaEstudiante> AsignaturaEstudiantes { get; set; }
