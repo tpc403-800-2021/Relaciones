@@ -41,14 +41,22 @@ namespace Relaciones.Controllers
                 return NotFound();
             }
 
+            /*
             var estudiante = await _context.Estudiantes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (estudiante == null)
+            */
+            var viewModel = new EstudianteDetails();
+            viewModel.Estudiante = await _context.Estudiantes
+                .Include(e => e.AsignaturaEstudiantes)
+                .ThenInclude(ae => ae.Asignatura)
+                .FirstAsync(e => e.Id == id);
+
+            if (viewModel.Estudiante == null)
             {
                 return NotFound();
             }
 
-            return View(estudiante);
+            return View(viewModel);
         }
 
         // GET: Estudiantes/Create
@@ -160,7 +168,21 @@ namespace Relaciones.Controllers
             if(await TryUpdateModelAsync<Estudiante>(estudianteParaEditar, "", e => e.Nombre, e => e.Edad))
             {
 
+                ActualizarRelacionesAsignaturaEstudiante(estudianteParaEditar, asignaturasSeleccionadas);
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }catch(DbUpdateException e)
+                {
+                    //Mensaje de error en caso de que no pueda hacer el update
+                    ModelState.AddModelError("error", "descripción del error");
+                }
+
+                return RedirectToAction(nameof(Index));
             }
+            CargarListaDeAsignaturasAsignadas(estudianteParaEditar);
+            return View(estudianteParaEditar);
 
             /*
             if (ModelState.IsValid)
@@ -185,6 +207,48 @@ namespace Relaciones.Controllers
             }
             return View(estudiante);
             */
+        }
+
+        private void ActualizarRelacionesAsignaturaEstudiante(Estudiante estudianteParaEditar, string[] asignaturasSeleccionadas)
+        {
+            if (asignaturasSeleccionadas == null)
+            {
+                estudianteParaEditar.AsignaturaEstudiantes = new List<AsignaturaEstudiante>();
+
+            }
+
+            var asignaturasSeleccionadasHS = new HashSet<string>(asignaturasSeleccionadas); //las asignaturas que vienen del formulario (los id en str)
+            var asignaturaEstudianteHS = new HashSet<int>(estudianteParaEditar.AsignaturaEstudiantes.Select(ae => ae.Asignatura.Id)); //las asignaturas actuales del estudiantes(los id en int)
+
+            foreach (var asignatura in _context.Asignaturas)
+            {
+                if (asignaturasSeleccionadasHS.Contains(asignatura.Id.ToString()))
+                {
+                    if (!asignaturaEstudianteHS.Contains(asignatura.Id))
+                    {
+                        estudianteParaEditar.AsignaturaEstudiantes.Add(new AsignaturaEstudiante
+                        {
+                            AsignaturasId = asignatura.Id,
+                            EstudiantesId = estudianteParaEditar.Id
+                        });
+                    }
+                    /*
+                    else
+                    {
+                    //Ésto se ejecuta si el estudiante ya posee la relación con la asignatura en la tabla intermedia
+                    }
+                    */
+                }
+                else
+                {
+                    if (asignaturaEstudianteHS.Contains(asignatura.Id))
+                    {
+                        AsignaturaEstudiante relacionAsEsARemover = estudianteParaEditar.AsignaturaEstudiantes.First(ae => ae.AsignaturasId == asignatura.Id);
+                        _context.Remove(relacionAsEsARemover);
+                    }
+
+                }
+            }
         }
 
         // GET: Estudiantes/Delete/5

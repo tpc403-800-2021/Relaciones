@@ -1,4 +1,4 @@
-﻿@model Relaciones.Models.Estudiante
+﻿@model Relaciones.Models.EstudianteDetails
 
 @{
     ViewData["Title"] = "Details";
@@ -11,20 +11,29 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
+            @Html.DisplayNameFor(model => model.Estudiante.Nombre)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
+            @Html.DisplayFor(model => model.Estudiante.Nombre)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Edad)
+            @Html.DisplayNameFor(model => model.Estudiante.Edad)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Edad)
+            @Html.DisplayFor(model => model.Estudiante.Edad)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estudiante.AsignaturaEstudiantes)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach(var asignatura in Model.Estudiante.AsignaturaEstudiantes)
+            {
+                <p>@Html.DisplayFor(model => asignatura.Asignatura.Nombre)</p>
+            }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Estudiante.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

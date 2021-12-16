@@ -21,5 +21,6 @@ namespace Relaciones.Context
 
         public DbSet<AsignaturaEstudiante> AsignaturaEstudiantes { get; set; }
 
+
     }
 }
